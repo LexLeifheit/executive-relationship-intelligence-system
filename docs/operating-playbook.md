@@ -3,11 +3,14 @@
 ## Weekly Review
 
 1. Open the current report.
-2. Handle overdue follow-ups first.
-3. For every A-grade relationship, confirm that there is either a recent touch
+2. Review `This Week` for follow-ups due in the next 14 days.
+3. Review `At Risk Relationships` and decide whether to repair, activate, or
+   downgrade each relationship.
+4. Review the `FIELDWAVE Pipeline` from most recent to oldest contact.
+5. For every A-grade relationship, confirm that there is either a recent touch
    or a clear next action.
-4. Add concise notes after each conversation.
-5. Schedule follow-up dates while context is fresh.
+6. Add concise notes after each conversation.
+7. Schedule follow-up dates while context is fresh.
 
 ## Scoring Guidance
 

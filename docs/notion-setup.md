@@ -20,3 +20,7 @@ Export instructions:
 
 Do not commit personal exports to GitHub. Use `data/sample/relationships.csv`
 when demonstrating the project.
+
+The default local report is designed for Monday morning review. It shows
+follow-ups in the next 14 days, high-influence relationships with lower health,
+and the FIELDWAVE pipeline sorted by last-contact date.

@@ -4,7 +4,7 @@ import argparse
 import csv
 from collections import Counter
 from dataclasses import dataclass
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from statistics import mean
 from typing import Iterable
@@ -112,6 +112,127 @@ def format_date(value: date | None) -> str:
     return value.isoformat() if value else "unknown"
 
 
+def markdown_cell(value: str) -> str:
+    return (value or "n/a").replace("|", "\\|").replace("\n", " ").strip() or "n/a"
+
+
+def sentence(value: str) -> str:
+    return value.strip() if value.strip() else "n/a"
+
+
+def this_week_items(relationships: Iterable[Relationship], run_date: date, days: int = 14) -> list[Relationship]:
+    end_date = run_date + timedelta(days=days)
+    return sorted(
+        [
+            item
+            for item in relationships
+            if item.follow_up_date and run_date <= item.follow_up_date <= end_date
+        ],
+        key=lambda item: (item.follow_up_date or end_date, -item.priority_score, item.name),
+    )
+
+
+def at_risk_items(relationships: Iterable[Relationship]) -> list[Relationship]:
+    return sorted(
+        [
+            item
+            for item in relationships
+            if (item.influence or 0) >= 4 and (item.health or 0) <= 3
+        ],
+        key=lambda item: (
+            item.health if item.health is not None else 99,
+            -(item.influence or 0),
+            item.follow_up_date or date.max,
+            item.name,
+        ),
+    )
+
+
+def fieldwave_pipeline_items(relationships: Iterable[Relationship]) -> list[Relationship]:
+    return sorted(
+        [item for item in relationships if any(role.lower() == "fieldwave" for role in item.roles)],
+        key=lambda item: (item.last_contact is not None, item.last_contact or date.min, item.name),
+        reverse=True,
+    )
+
+
+def write_weekly_report(relationships: list[Relationship], output: Path, run_date: date | None = None) -> None:
+    run_date = run_date or date.today()
+    upcoming = this_week_items(relationships, run_date)
+    risk_items = at_risk_items(relationships)
+    pipeline = fieldwave_pipeline_items(relationships)
+
+    lines = [
+        "# Weekly Relationship Intelligence Report",
+        "",
+        f"Generated: {run_date.isoformat()}",
+        f"Window: {run_date.isoformat()} through {(run_date + timedelta(days=14)).isoformat()}",
+        "",
+        "## This Week",
+        "",
+    ]
+
+    if upcoming:
+        for item in upcoming:
+            context = f"{item.name} ({item.organization or 'no organization'})"
+            action = f" - {item.next_action}" if item.next_action else ""
+            conversation = f" Next conversation: {item.next_conversation}" if item.next_conversation else ""
+            lines.append(f"- {format_date(item.follow_up_date)}: {context}{action}.{conversation}".rstrip())
+    else:
+        lines.append("- No follow-ups are scheduled in the next 14 days.")
+
+    lines.extend(["", "## At Risk Relationships", ""])
+    if risk_items:
+        for item in risk_items:
+            lines.extend(
+                [
+                    f"### {item.name} ({item.organization or 'no organization'})",
+                    "",
+                    f"- Influence: {item.influence or 'n/a'}",
+                    f"- Health: {item.health or 'n/a'}",
+                    f"- Last contact: {format_date(item.last_contact)}",
+                    f"- Follow-up date: {format_date(item.follow_up_date)}",
+                    f"- Next conversation: {sentence(item.next_conversation)}",
+                    f"- Notes: {sentence(item.notes)}",
+                    f"- 12-month objective: {sentence(item.objective)}",
+                    "",
+                ]
+            )
+    else:
+        lines.append("- No relationships currently meet the at-risk criteria.")
+
+    lines.extend(
+        [
+            "",
+            "## FIELDWAVE Pipeline",
+            "",
+            "| Name | Organization | Relationship Purpose | Last Contact | Follow-up Date | Next Action |",
+            "| --- | --- | --- | --- | --- | --- |",
+        ]
+    )
+    if pipeline:
+        for item in pipeline:
+            lines.append(
+                "| "
+                + " | ".join(
+                    [
+                        markdown_cell(item.name),
+                        markdown_cell(item.organization),
+                        markdown_cell(", ".join(item.purpose)),
+                        markdown_cell(format_date(item.last_contact)),
+                        markdown_cell(format_date(item.follow_up_date)),
+                        markdown_cell(item.next_action),
+                    ]
+                )
+                + " |"
+            )
+    else:
+        lines.append("| n/a | n/a | n/a | n/a | n/a | n/a |")
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def write_markdown_report(relationships: list[Relationship], output: Path, stale_days: int) -> None:
     due = due_items(relationships)
     stale = stale_items(relationships, stale_days)
@@ -166,11 +287,16 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Analyze an Executive Relationship Intelligence CSV export.")
     parser.add_argument("csv_path", type=Path, help="Path to a Notion CSV export or compatible relationship CSV.")
     parser.add_argument("--output", type=Path, default=Path("reports/relationship-report.md"))
+    parser.add_argument("--report", choices=("weekly", "portfolio"), default="weekly")
+    parser.add_argument("--run-date", type=parse_date, help="Report run date. Defaults to today.")
     parser.add_argument("--stale-days", type=int, default=60)
     args = parser.parse_args()
 
     relationships = load_relationships(args.csv_path)
-    write_markdown_report(relationships, args.output, args.stale_days)
+    if args.report == "weekly":
+        write_weekly_report(relationships, args.output, args.run_date)
+    else:
+        write_markdown_report(relationships, args.output, args.stale_days)
     print(f"Wrote {args.output} for {len(relationships)} relationships.")
 
 

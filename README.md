@@ -14,7 +14,7 @@ leaders.
 - Supports Notion CSV exports.
 - Keeps private relationship data out of GitHub.
 - Generates a local markdown report with overdue follow-ups, stale
-  relationships, portfolio health, grade counts, and top relationship roles.
+  relationships, at-risk relationships, and FIELDWAVE pipeline visibility.
 - Documents the review cadence and scoring model so the system can be adapted
   for others.
 
@@ -35,7 +35,7 @@ scripts/run_local_report.sh    Convenience script for local reports
 Run the sample report:
 
 ```bash
-python3 -m src.eris.analyze data/sample/relationships.csv --output reports/sample-report.md
+python3 -m src.eris.analyze data/sample/relationships.csv --report weekly --output reports/sample-report.md
 ```
 
 Use a private Notion export:
@@ -46,6 +46,14 @@ scripts/run_local_report.sh
 ```
 
 The generated report will appear in `reports/`.
+
+The weekly report includes:
+
+- `This Week`: relationships with follow-up dates in the next 14 days.
+- `At Risk Relationships`: influence `>= 4` and health `<= 3`, with next
+  conversation, notes, and 12-month objective.
+- `FIELDWAVE Pipeline`: relationships tagged `FIELDWAVE`, including purpose,
+  sorted by most recent last contact.
 
 ## Data Privacy
 
