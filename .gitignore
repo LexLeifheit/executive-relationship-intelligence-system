@@ -1,0 +1,15 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Keep personal exports, derived reports, and local notes out of GitHub.
+data/private/*
+notion-export-inspection/
+reports/*
+*.zip
+
+# Allow reusable placeholders.
+!data/private/.gitkeep
+!reports/.gitkeep

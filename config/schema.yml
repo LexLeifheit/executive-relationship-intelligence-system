@@ -1,0 +1,93 @@
+system:
+  name: Executive Relationship Intelligence System
+  description: >
+    A lightweight operating system for maintaining high-value executive
+    relationships, prioritizing follow-up, and converting notes into intentional
+    relationship actions.
+
+fields:
+  Name:
+    type: text
+    required: true
+    description: Person or account name.
+  Organization:
+    type: text
+    required: false
+    description: Current organization, affiliation, or primary context.
+  Relationship Roles:
+    type: multi_select
+    required: false
+    examples:
+      - Champions
+      - FIELDWAVE
+      - Government
+      - Philanthropy
+    description: Strategic role tags that explain why the relationship matters.
+  Relationship Purpose:
+    type: multi_select
+    required: false
+    examples:
+      - Job Search
+      - Mentor
+      - Reference
+      - Partner
+    description: Intended use or near-term purpose of the relationship.
+  Influence:
+    type: number
+    required: false
+    scale: 1-4
+    description: Relative ability to affect outcomes, open doors, or shape decisions.
+  Health:
+    type: number
+    required: false
+    scale: 1-4
+    description: Current strength and warmth of the relationship.
+  Last Contact:
+    type: date
+    required: false
+    description: Most recent meaningful touchpoint.
+  Next Action:
+    type: text
+    required: false
+    description: Specific action to take next.
+  Follow-up Date:
+    type: date
+    required: false
+    description: Date when the next touch should happen.
+  Next Conversation:
+    type: text
+    required: false
+    description: Suggested topic, ask, or opening for the next conversation.
+  Notes:
+    type: text
+    required: false
+    description: Context, personal details, recent updates, and memory anchors.
+  12-Month Objective:
+    type: text
+    required: false
+    description: Desired relationship state or strategic outcome over the next year.
+  Grade:
+    type: select
+    required: false
+    examples:
+      - A
+      - B
+      - C
+    description: Priority tier for attention and review cadence.
+
+views:
+  weekly_review:
+    description: Relationships requiring action now or soon.
+    sort:
+      - Follow-up Date ascending
+      - Grade ascending
+      - Influence descending
+  strategic_map:
+    description: High-influence relationships grouped by role and purpose.
+    filters:
+      - Influence >= 3
+  relationship_repair:
+    description: Important relationships with low health or stale contact.
+    filters:
+      - Health <= 2
+      - Grade in A,B

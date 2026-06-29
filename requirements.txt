@@ -1,0 +1,2 @@
+# The core CLI uses only the Python standard library.
+# Optional future additions can go here.
