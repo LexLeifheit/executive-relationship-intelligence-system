@@ -1,12 +1,27 @@
 # Executive Relationship Intelligence System
 
-A private-first operating system for tracking high-value relationships,
-prioritizing follow-up, and turning relationship notes into intentional action.
+A private-first, AI-assisted workflow for tracking high-value relationships,
+prioritizing follow-up, and turning relationship notes into a weekly executive
+brief.
 
-This project is built from a real Notion relationship database, but it is
-structured so the personal data stays local and the repository can be reused by
-other executives, operators, founders, fundraisers, job seekers, and civic
-leaders.
+I built this as a minimal public demonstration of how I use AI for
+judgment-heavy operating work: structuring messy relationship context,
+protecting private data, and creating a repeatable briefing process that could
+support a principal, policy leader, or executive team.
+
+The public repository contains only sanitized sample data and reusable
+documentation. Private relationship exports and generated reports stay local.
+
+## Portfolio Framing
+
+This project demonstrates skills that are relevant to policy, strategy, and
+chief-of-staff roles:
+
+- Building lightweight operating systems for ambiguous work.
+- Translating private context into structured decision support.
+- Maintaining stakeholder and relationship discipline.
+- Using AI assistance while preserving human judgment and confidentiality.
+- Creating documentation that another leader or team could adapt.
 
 ## What It Does
 
@@ -17,6 +32,12 @@ leaders.
   relationships, at-risk relationships, and FIELDWAVE pipeline visibility.
 - Documents the review cadence and scoring model so the system can be adapted
   for others.
+
+## Public Demo
+
+- [Public Case Study](docs/public-case-study.md)
+- [AI-Assisted Workflow](docs/ai-assisted-workflow.md)
+- [Sample Weekly Brief](docs/sample-weekly-brief.md)
 
 ## Repository Structure
 
@@ -61,11 +82,17 @@ Personal relationship exports should not be committed. The `.gitignore` file
 excludes `data/private/`, `reports/`, and exported ZIP files. Keep public demos
 sanitized and place them in `data/sample/`.
 
+This is especially important because the project is meant to demonstrate the
+workflow, not disclose the underlying relationship intelligence.
+
 ## Documentation
 
 - [System Design](docs/system-design.md)
 - [Notion Setup](docs/notion-setup.md)
 - [Operating Playbook](docs/operating-playbook.md)
+- [Public Case Study](docs/public-case-study.md)
+- [AI-Assisted Workflow](docs/ai-assisted-workflow.md)
+- [Sample Weekly Brief](docs/sample-weekly-brief.md)
 
 ## Project Status
 
