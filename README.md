@@ -26,7 +26,9 @@ chief-of-staff roles:
 ## What It Does
 
 - Defines a practical relationship intelligence schema.
-- Supports Notion CSV exports.
+- Treats Notion as the private source of truth for relationship records.
+- Supports ChatGPT/Codex-assisted updates to structured Notion fields and notes.
+- Supports Notion CSV exports for local reporting.
 - Keeps private relationship data out of GitHub.
 - Generates a local markdown report with overdue follow-ups, stale
   relationships, at-risk relationships, and FIELDWAVE pipeline visibility.
@@ -59,7 +61,7 @@ Run the sample report:
 python3 -m src.eris.analyze data/sample/relationships.csv --report weekly --output reports/sample-report.md
 ```
 
-Use a private Notion export:
+Use a private Notion export or synced local cache:
 
 ```bash
 cp /path/to/notion-export.csv data/private/relationships.csv
@@ -67,6 +69,12 @@ scripts/run_local_report.sh
 ```
 
 The generated report will appear in `reports/`.
+
+In the current operating model, Notion remains the source of truth. ChatGPT or
+Codex can be used as a private update layer: the user describes a relationship
+touchpoint in natural language, the assistant updates the matching Notion record
+with structured fields and concise notes, and the local CSV/report workflow is
+refreshed from that private source.
 
 The weekly report includes:
 
@@ -84,6 +92,10 @@ sanitized and place them in `data/sample/`.
 
 This is especially important because the project is meant to demonstrate the
 workflow, not disclose the underlying relationship intelligence.
+
+Relationship notes should follow a trust-preserving standard: store only what is
+useful for respectful follow-up, avoid speculation or unnecessary sensitive
+detail, and keep write actions explicit and reviewable.
 
 ## Documentation
 
@@ -103,5 +115,6 @@ Version `0.1.0` is a lightweight documented foundation:
 - local CSV reporting supported
 - privacy guardrails in place
 
-Future additions could include calendar reminders, contact freshness alerts,
-AI-assisted next-action drafting, and a small browser dashboard.
+Future additions could include a first-class Notion sync command, calendar
+reminders, contact freshness alerts, AI-assisted next-action drafting, and a
+small browser dashboard.

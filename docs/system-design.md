@@ -1,9 +1,10 @@
 # System Design
 
 The Executive Relationship Intelligence System is a lightweight relationship
-operating system. It starts as a Notion database and can be repurposed as a
-local, private analysis workflow for any executive, founder, operator, job
-seeker, fundraiser, or civic leader who manages a high-trust network.
+operating system. It uses Notion as the private source of truth and can be
+repurposed as a local, private analysis workflow for any executive, founder,
+operator, job seeker, fundraiser, or civic leader who manages a high-trust
+network.
 
 ## Core Objects
 
@@ -17,8 +18,16 @@ represents a person and the context needed to maintain intentional contact:
 
 ## Operating Cadence
 
+Between reviews:
+
+- Capture meaningful touchpoints in natural language.
+- Update the matching Notion record with structured fields and concise notes.
+- Prefer explicit follow-up dates and next actions when action is needed.
+- Use no follow-up when the contact should simply refresh relationship context.
+
 Weekly review:
 
+- Refresh the local private CSV from Notion.
 - Review follow-ups due now.
 - Scan A-grade relationships with stale last-contact dates.
 - Add next actions for relationships with strategic value but no active motion.
@@ -37,17 +46,24 @@ Quarterly review:
 
 ## Privacy Model
 
-The repository is designed so personal relationship data stays local. Raw
-exports belong under `data/private/`, which is ignored by Git. Public examples
-belong under `data/sample/` and should be sanitized.
+The repository is designed so personal relationship data stays private. Notion
+holds the working database. Raw exports belong under `data/private/`, which is
+ignored by Git. Generated reports belong under `reports/`, which is also ignored
+by Git. Public examples belong under `data/sample/` and should be sanitized.
+
+The system should minimize sensitive detail. Notes should be factual, useful for
+respectful follow-up, and free of speculation. Health, family, job-search,
+funding, and conflict-related context should be captured only when it supports a
+legitimate relationship-maintenance purpose.
 
 ## Repurposing Model
 
 To adapt this system for another person or organization:
 
 1. Copy the schema in `config/schema.yml`.
-2. Create or export a compatible CSV.
-3. Keep personal data in `data/private/`.
-4. Run the report workflow.
-5. Adjust roles, purpose tags, grade definitions, and review cadence for the
+2. Create a private Notion database using the schema.
+3. Decide which AI assistant or workflow is allowed to update Notion.
+4. Export or sync a compatible CSV into `data/private/` for local reporting.
+5. Run the report workflow.
+6. Adjust roles, purpose tags, grade definitions, and review cadence for the
    new operating context.
