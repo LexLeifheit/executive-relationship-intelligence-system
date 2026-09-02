@@ -150,7 +150,11 @@ def at_risk_items(relationships: Iterable[Relationship]) -> list[Relationship]:
 
 def fieldwave_pipeline_items(relationships: Iterable[Relationship]) -> list[Relationship]:
     return sorted(
-        [item for item in relationships if any(role.lower() == "fieldwave" for role in item.roles)],
+        [
+            item
+            for item in relationships
+            if any(tag.lower() == "fieldwave" for tag in [*item.roles, *item.purpose])
+        ],
         key=lambda item: (item.last_contact is not None, item.last_contact or date.min, item.name),
         reverse=True,
     )
